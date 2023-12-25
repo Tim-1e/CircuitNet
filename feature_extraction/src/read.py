@@ -44,14 +44,14 @@ class Paraser:
 
         try:
             if 'nvdla' in self.root_dir:
-                data_power = pd.read_csv(os.path.join(self.root_dir, 'NV_nvdla.inst.power.rpt.gz'),sep='\s+',header=1, compression='gzip')
+                data_power = pd.read_csv(os.path.join(self.root_dir, 'NV_nvdla.inst.power.rpt'),sep='\s+',header=1)
             elif 'Vortex' in self.root_dir:
-                data_power = pd.read_csv(os.path.join(self.root_dir, 'Vortex.inst.power.rpt.gz'),sep='\s+',header=1, compression='gzip')
+                data_power = pd.read_csv(os.path.join(self.root_dir, 'Vortex.inst.power.rpt'),sep='\s+',header=1)
             else:
-                data_power = pd.read_csv(os.path.join(self.root_dir, 'pulpino_top.inst.power.rpt.gz'),sep='\s+',header=1, compression='gzip')
-            data_r = pd.read_csv(os.path.join(self.root_dir, 'eff_res.rpt.gz'),sep='\s+', low_memory=False, compression='gzip')
+                data_power = pd.read_csv(os.path.join(self.root_dir, 'pulpino_top.inst.power.rpt'),sep='\s+',header=1)
+            data_r = pd.read_csv(os.path.join(self.root_dir, 'eff_res.rpt'),sep='\s+', low_memory=False)
             if not self.final_test:
-                data_ir = pd.read_csv(os.path.join(self.root_dir, 'static_ir.gz'),sep='\s+', compression='gzip')
+                data_ir = pd.read_csv(os.path.join(self.root_dir, 'static_ir'),sep='\s+')
         except Exception as e:
             print('one of the report not exists')
             return 0    

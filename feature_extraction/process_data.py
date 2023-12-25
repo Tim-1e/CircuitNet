@@ -10,7 +10,7 @@ class ArgParaser(object):
         self.parser = argparse.ArgumentParser()
         self.parser.add_argument('--data_root', default='./data', help='the parent dir of log dirs')
         self.parser.add_argument('--save_path', default='./out', help='save path')
-        self.parser.add_argument('--process_capacity', default=2, help='number of process for multi process')
+        self.parser.add_argument('--process_capacity', default=5, help='number of process for multi process')
         self.parser.add_argument('--plot', default=True, help='plot the results in $save_path/visual')
         self.parser.add_argument('--debug', default=False, help='disable multi process to use pdb')
         self.parser.add_argument('--final_test', default=False, help='prevent using static_ir to mimic the final environment')

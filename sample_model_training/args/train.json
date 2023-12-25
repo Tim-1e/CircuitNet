@@ -5,10 +5,11 @@
     "ann_file": "../feature_extraction/train.csv",
     "dataroot": "../feature_extraction",
     "dataset_type": "TrainDataset",
-    "model_type": "FCN",
+    "model_type": "MAVI",
     "in_channels": 3,
     "out_channels": 2,
     "lr": 0.005,
     "weight_decay": 0,
+    "pretrained": null,
     "loss_type": "MSELoss"
 }
