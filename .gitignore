@@ -11,3 +11,4 @@ feature_extraction/train.csv
 feature_extraction/test.csv
 
 sample_model_training/work_dir/*
+sample_model_training/runs/*

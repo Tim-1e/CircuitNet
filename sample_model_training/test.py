@@ -71,7 +71,7 @@ def test():
 
     logger.info('===> Building model')
     # Initialize model parameters
-    model = build_model(arg_dict)
+    model,_ = build_model(arg_dict)
     if not arg_dict['cpu']:
         model = model.to(device)
 

@@ -12,6 +12,7 @@ from utils.arg_parser import Parser
 from utils.logger import build_logger
 from math import cos, pi
 
+from torch.utils.tensorboard import SummaryWriter
  
 def checkpoint(logger, model, epoch, save_path):
     if not os.path.exists(save_path):
@@ -132,7 +133,13 @@ def train():
 
     logger.info('===> Building model')
     # Initialize model parameters
-    model = build_model(arg_dict)
+    model,model_name = build_model(arg_dict)
+    
+    #Visualize model
+    writer_graph = SummaryWriter("runs/model_visualization_{}".format(model_name))
+    writer_graph.add_graph(model, torch.rand(1, 3, 512, 512))
+    writer_graph.close()
+    
     model = model.to(device)
     
     # Build loss

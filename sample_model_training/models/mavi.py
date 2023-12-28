@@ -163,6 +163,7 @@ class MAVI(nn.Module):
 
 
     def forward(self, x):
+        x = x.unsqueeze(2)  # 插入一个维度作为depth，x 的形状现在是 [batch_size, channels, 1, height, width]
         x_in = x[:, :, :self.out_channels, :, :]
         x1 = self.inc(x)
         x2 = self.down1(x1)
