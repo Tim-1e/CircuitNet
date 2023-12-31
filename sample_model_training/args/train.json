@@ -1,7 +1,7 @@
 {   "gpu": 0,
     "save_path": "work_dir/sample/",
-    "batch_size": 20,
-    "max_iters": 10000,
+    "batch_size": 10,
+    "max_iters": 100,
     "ann_file": "../feature_extraction/train.csv",
     "dataroot": "../feature_extraction",
     "dataset_type": "TrainDataset",
@@ -9,7 +9,7 @@
     "in_channels": 3,
     "out_channels": 2,
     "lr": 0.005,
-    "weight_decay": 0.001,
+    "weight_decay": 0.0001,
     "pretrained": null,
     "loss_type": "MSELoss"
 }

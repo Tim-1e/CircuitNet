@@ -134,14 +134,15 @@ def train():
     logger.info('===> Building model')
     # Initialize model parameters
     model,model_name = build_model(arg_dict)
-    
+
+    # exit()
     #Visualize model
     writer_graph = SummaryWriter("runs/model_visualization_{}".format(model_name))
     writer_graph.add_graph(model, torch.rand(1, 3, 512, 512))
     writer_graph.close()
     
     model = model.to(device)
-    
+
     # Build loss
     loss = build_loss(arg_dict)
 
@@ -180,6 +181,19 @@ def train():
                 iter_num += 1
                 
                 bar.update(1)
+                
+                # model_out_path = "great.pth"
+                # torch.save({'state_dict': model.state_dict()}, model_out_path)
+                # state_dict_before = model.state_dict()
+                # from models.ZYCN import ZYCN
+                # new_model = ZYCN().to(device)
+                # new_model.init_weights(pretrained=model_out_path)
+                # state_dict_after= new_model.state_dict()
+                # # 比较
+                # for key in state_dict_before:
+                #     if not torch.equal(state_dict_before[key], state_dict_after[key]):
+                #         print(f"不匹配的参数: {key}")
+                
                 if iter_num % save_freq == 0:
                     checkpoint(logger, model, iter_num, log_dir)
                 if iter_num % print_freq == 0:

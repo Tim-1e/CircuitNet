@@ -150,7 +150,16 @@ class Res_Encoder(nn.Module):
         resnet.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
         # 使用 resnet 的特征，除去最后的全连接层和平均池化层
         self.features = nn.Sequential(*list(resnet.children())[:-2])
-
+        self.freeze_layers_except_first_conv()
+        
+    def freeze_layers_except_first_conv(self):
+        # 冻结除了 self.features 的第一个子模块之外的所有层
+        for name, child in self.features.named_children():
+            if name == "0":  # 只有第一个卷积层不冻结
+                continue
+            for param in child.parameters():
+                param.requires_grad = False
+                
     def forward(self, x):
         for i, layer in enumerate(self.features):
             x = layer(x)
@@ -161,39 +170,34 @@ class Res_Decoder(nn.Module):
     def __init__(self, in_channels=2048, out_channels=2):
         super(Res_Decoder, self).__init__()
         # 第一层上采样和卷积
-        self.upconv1 = nn.ConvTranspose2d(in_channels, in_channels // 4, 4,4)
-        self.conv1 = nn.Conv2d(in_channels // 4, in_channels // 4, kernel_size=3, padding=1)
-        self.relu1 = nn.ReLU(inplace=True)
-
-        # 第二层上采样和卷积
-        self.upconv2 = nn.ConvTranspose2d(in_channels // 4, in_channels // 16, 4,4)
-        self.conv2 = nn.Conv2d(in_channels // 16, in_channels // 16, kernel_size=3, padding=1)
-        self.relu2 = nn.ReLU(inplace=True)
-
-        # 第二层上采样和卷积
-        self.upconv3 = nn.ConvTranspose2d(in_channels // 16, in_channels // 32, 4,2,1)
-        self.conv3 = nn.Conv2d(in_channels // 32, in_channels // 32, kernel_size=3, padding=1)
-        self.relu3 = nn.ReLU(inplace=True)
-        
-        # 最终卷积层
-        self.final_conv = nn.Conv2d(in_channels // 32, out_channels, kernel_size=1)
-        self.activation = nn.Sigmoid()
+        self.conv1 = conv(in_channels, 2048)
+        self.upc1 = upconv(2048, 512)
+        self.conv2 = conv(512, 512)
+        self.upc2 = upconv(512, 128)
+        self.conv3 = conv(128, 128)
+        self.upc3 = upconv(128, 32)
+        self.conv4 = conv(32, 32)
+        self.upc4 = upconv(32, 16)
+        self.conv5 = conv(16, 16)
+        self.upc5 = upconv(16, 4)  
+        self.conv6 =  nn.Sequential(
+                nn.Conv2d(4, out_channels, 3, 1, 1),
+                nn.Sigmoid()
+                )
 
     def forward(self, x):
-        x = self.upconv1(x)
         x = self.conv1(x)
-        x = self.relu1(x)
-
-        x = self.upconv2(x)
+        x = self.upc1(x)
         x = self.conv2(x)
-        x = self.relu2(x)
-        
-        x = self.upconv3(x)
+        x = self.upc2(x)
         x = self.conv3(x)
-        x = self.relu3(x)
-        
-        x = self.final_conv(x)
-        return self.activation(x)
+        x = self.upc3(x)
+        x = self.conv4(x)
+        x = self.upc4(x)
+        x = self.conv5(x)
+        x = self.upc5(x)
+        x = self.conv6(x)
+        return x
 
 class ZYCN(nn.Module):
     def __init__(self,

@@ -3,10 +3,10 @@
     "ann_file": "../feature_extraction/test.csv",
     "dataroot": "../feature_extraction",
     "dataset_type": "TestDataset",
-    "model_type": "FCN",
+    "model_type": "ZYCN",
     "in_channels": 3,
     "out_channels": 2,
     "eval_metric": ["MAE", "corrcoef"],
-    "pretrained": "./work_dir/sample/train-20231227_225707/model_iters_1000.pth",
+    "pretrained": "./work_dir/sample/train-20231231_190734/model_iters_10.pth",
     "final_test": false
 }
