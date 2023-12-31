@@ -1,7 +1,7 @@
 {   "gpu": 0,
     "save_path": "work_dir/sample/",
     "batch_size": 10,
-    "max_iters": 100,
+    "max_iters": 1000,
     "ann_file": "../feature_extraction/train.csv",
     "dataroot": "../feature_extraction",
     "dataset_type": "TrainDataset",

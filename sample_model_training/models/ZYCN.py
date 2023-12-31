@@ -145,20 +145,23 @@ class Decoder(nn.Module):
 class Res_Encoder(nn.Module):
     def __init__(self, in_channels):
         super(Res_Encoder, self).__init__()
+        num_unfreeze_blocks=10
         resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
         # 替换resnet的第一个卷积层以匹配输入通道数
         resnet.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
         # 使用 resnet 的特征，除去最后的全连接层和平均池化层
         self.features = nn.Sequential(*list(resnet.children())[:-2])
-        self.freeze_layers_except_first_conv()
-        
-    def freeze_layers_except_first_conv(self):
-        # 冻结除了 self.features 的第一个子模块之外的所有层
-        for name, child in self.features.named_children():
-            if name == "0":  # 只有第一个卷积层不冻结
-                continue
-            for param in child.parameters():
-                param.requires_grad = False
+        # 冻结除了第一个卷积层和最后几个残差块之外的所有层
+        self.freeze_layers(num_unfreeze_blocks)
+
+    def freeze_layers(self, num_unfreeze_blocks):
+        # 冻结除了第一个卷积层和最后几个残差块之外的所有层
+        child_counter = 0
+        for child in self.features.children():
+            if child_counter < len(self.features) - num_unfreeze_blocks or child_counter == 0:
+                for param in child.parameters():
+                    param.requires_grad = False
+            child_counter += 1
                 
     def forward(self, x):
         for i, layer in enumerate(self.features):
